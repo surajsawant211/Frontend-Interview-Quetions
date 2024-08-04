@@ -221,44 +221,207 @@ module.exports = {
 ### 41. What are some ways to optimize React application performance?
 
 **Answer:** Optimize performance by using `React.memo`, `useCallback`, `useMemo`, code splitting, lazy loading, optimizing rendering, and using efficient algorithms.
+- React.memo: Memoizes functional components to prevent unnecessary re-renders.
+- useCallback: Memoizes callback functions.
+- useMemo: Memoizes the results of computations.
+- Code splitting: Splits code into smaller chunks to be loaded on demand using React.lazy and Suspense.
+- Lazy loading: Delays the loading of components until they are needed.
+- Optimizing rendering: Avoids unnecessary renders by using keys, minimizing state, and leveraging shouldComponentUpdate or PureComponent.
+- Efficient algorithms: Uses efficient data structures and algorithms for state management and operations.
 
 ### 42. What is `React.memo`?
 
 **Answer:** `React.memo` is a higher-order component that memoizes a functional component, preventing unnecessary re-renders by performing a shallow comparison of props.
 
+React.memo is a higher-order component that memoizes a functional component. It performs a shallow comparison of props and prevents unnecessary re-renders if props haven't changed.
+
+``` jsx
+import React from 'react';
+
+const MyComponent = React.memo(({ prop1, prop2 }) => {
+  // component code
+  return <div>{prop1} {prop2}</div>;
+});
+
+export default MyComponent;
+```
+
 ### 43. What is `useCallback` and when should you use it?
 
 **Answer:** `useCallback` is a hook that returns a memoized version of a callback function. It is used to prevent unnecessary re-creation of functions on every render, optimizing performance.
+
+``` jsx
+import React, { useState, useCallback } from 'react';
+
+const MyComponent = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => {
+    setCount(prevCount => prevCount + 1);
+  }, []);
+
+  return <button onClick={increment}>Increment {count}</button>;
+};
+
+export default MyComponent;
+```
 
 ### 44. What is `useMemo` and how does it work?
 
 **Answer:** `useMemo` is a hook that memoizes the result of a computation, re-calculating it only when its dependencies change. It helps optimize performance by preventing expensive recalculations.
 
+``` jsx
+import React, { useMemo, useState } from 'react';
+
+const MyComponent = ({ items }) => {
+  const [filter, setFilter] = useState('');
+
+  const filteredItems = useMemo(() => {
+    return items.filter(item => item.includes(filter));
+  }, [items, filter]);
+
+  return (
+    <div>
+      <input value={filter} onChange={e => setFilter(e.target.value)} />
+      <ul>
+        {filteredItems.map(item => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default MyComponent;
+```
+
 ### 45. How do you handle large lists in React?
 
 **Answer:** Handle large lists using virtualization libraries like `react-window` or `react-virtualized` to render only visible items and improve performance.
+
+- Example using **React Window**
+``` jsx
+import React from 'react';
+import { FixedSizeList as List } from 'react-window';
+
+const Row = ({ index, style }) => (
+  <div style={style}>Row {index}</div>
+);
+
+const MyList = () => (
+  <List
+    height={150}
+    itemCount={1000}
+    itemSize={35}
+    width={300}
+  >
+    {Row}
+  </List>
+);
+
+export default MyList;
+```
 
 ### 46. What are `PureComponent` and `shouldComponentUpdate` used for?
 
 **Answer:** 
 - **`PureComponent`:** A class component that implements a shallow comparison of props and state to optimize rendering.
+```jsx
+import React, { PureComponent } from 'react';
+
+class MyComponent extends PureComponent {
+  render() {
+    return <div>{this.props.value}</div>;
+  }
+}
+```
 - **`shouldComponentUpdate`:** A lifecycle method that determines if a component should re-render based on changes in props or state.
+``` jsx
+import React, { Component } from 'react';
+
+class MyComponent extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.value !== this.props.value;
+  }
+
+  render() {
+    return <div>{this.props.value}</div>;
+  }
+}
+```
 
 ### 47. How do you optimize the performance of a React application with Redux?
 
 **Answer:** Optimize Redux performance by using `reselect` for memoized selectors, avoiding unnecessary re-renders, and using middleware like `redux-thunk` or `redux-saga` for handling side effects.
+- Reselect: Use memoized selectors to avoid unnecessary recalculations.
+- Avoid unnecessary re-renders: Use shouldComponentUpdate, React.memo, or connect options to prevent re-renders.
+- Middleware: Use redux-thunk or redux-saga for handling side effects efficiently.
 
 ### 48. What is the `useImperativeHandle` hook?
 
 **Answer:** `useImperativeHandle` is a hook that customizes the instance value that is exposed when using `ref` with `forwardRef`, allowing you to expose specific methods or properties.
 
+``` jsx
+import React, { useImperativeHandle, forwardRef, useRef } from 'react';
+
+const MyInput = forwardRef((props, ref) => {
+  const inputRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current.focus();
+    }
+  }));
+
+  return <input ref={inputRef} />;
+});
+
+const Parent = () => {
+  const inputRef = useRef();
+
+  return (
+    <div>
+      <MyInput ref={inputRef} />
+      <button onClick={() => inputRef.current.focus()}>Focus Input</button>
+    </div>
+  );
+};
+
+export default Parent;
+```
+
 ### 49. How do you debug React applications?
 
 **Answer:** Debug React applications using browser developer tools, React Developer Tools extension, console logs, and tools like Redux DevTools for debugging state changes.
+- Browser Developer Tools: Inspect elements and debug JavaScript.
+- React Developer Tools: Inspect the React component hierarchy and state.
+- Console logs: Use console.log to track values and application flow.
+- Redux DevTools: Debug Redux state changes and actions.
 
 ### 50. What is the purpose of `useLayoutEffect` in React?
 
-**Answer:** `useLayoutEffect` is used to perform effects that require reading layout from the DOM or synchronously performing changes before the browser paints.
+**Answer:** `useLayoutEffect is used to perform effects that require reading layout from the DOM or synchronously performing changes before the browser paints. It runs synchronously after all DOM mutations but before the browser has painted.
+``` jsx
+import React, { useLayoutEffect, useRef, useState } from 'react';
+
+const MyComponent = () => {
+  const [width, setWidth] = useState(0);
+  const divRef = useRef();
+
+  useLayoutEffect(() => {
+    setWidth(divRef.current.offsetWidth);
+  }, []);
+
+  return (
+    <div>
+      <div ref={divRef} style={{ width: '100%' }}>Content</div>
+      <p>Width: {width}px</p>
+    </div>
+  );
+};
+
+export default MyComponent;
+```
 
 ## Routing and Navigation
 
