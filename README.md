@@ -309,7 +309,8 @@ import { Navigate } from 'react-router-dom';
 return <Navigate to="/new-path" />;
 ```
 - Using useNavigate:
-  ``` jsx
+
+``` jsx
 import { useNavigate } from 'react-router-dom';
 
 const SomeComponent = () => {
@@ -328,6 +329,7 @@ const SomeComponent = () => {
 **Answer:** 
 - **`Route`:** Defines a mapping between a URL path and a component that should be rendered.
 - **`Switch`:** Renders the first child `<Route>` or `<Redirect>` that matches the current location.
+
 ``` jsx
 import { Routes, Route } from 'react-router-dom';
 
