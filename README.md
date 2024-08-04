@@ -285,19 +285,93 @@ export default ProtectedRoute;
 
 **Answer:** A route parameter is a dynamic segment in a route path that allows you to capture and pass values such as IDs or other data to components.
 
+``` jsx
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+const UserProfile = () => {
+  const { userId } = useParams();
+  return <div>User ID: {userId}</div>;
+};
+
+// Route definition
+<Route path="/user/:userId" element={<UserProfile />} />
+```
+
 ### 53. How do you handle redirection in React Router?
 
 **Answer:** Handle redirection using the `<Navigate>` component or the `history.push` method to programmatically navigate to different routes based on conditions.
+- Using <Navigate>:
+``` jsx
+import { Navigate } from 'react-router-dom';
+
+// Inside your component
+return <Navigate to="/new-path" />;
+```
+- Using useNavigate:
+  ``` jsx
+import { useNavigate } from 'react-router-dom';
+
+const SomeComponent = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/new-path');
+  };
+
+  return <button onClick={handleClick}>Go to new path</button>;
+};
+```
 
 ### 54. What are `Route` and `Switch` components in React Router?
 
 **Answer:** 
 - **`Route`:** Defines a mapping between a URL path and a component that should be rendered.
 - **`Switch`:** Renders the first child `<Route>` or `<Redirect>` that matches the current location.
+``` jsx
+import { Routes, Route } from 'react-router-dom';
+
+const App = () => (
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+```
 
 ### 55. How do you implement nested routing in React Router?
 
 **Answer:** Implement nested routing by defining child routes within parent routes. Use the `Route` component to specify the child routes inside a parent route’s component.
+
+``` jsx
+import React from 'react';
+import { Routes, Route, Outlet } from 'react-router-dom';
+
+const Dashboard = () => (
+  <div>
+    <h2>Dashboard</h2>
+    <Outlet />
+  </div>
+);
+
+const DashboardHome = () => <div>Dashboard Home</div>;
+const Settings = () => <div>Settings</div>;
+
+const App = () => (
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/dashboard" element={<Dashboard />}>
+      <Route path="home" element={<DashboardHome />} />
+      <Route path="settings" element={<Settings />} />
+    </Route>
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
+```
+#### In this example, the Dashboard component includes an <Outlet> where the nested routes (/dashboard/home and /dashboard/settings) will be rendered.
 
 ## Testing
 
