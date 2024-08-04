@@ -265,6 +265,21 @@ module.exports = {
 ### 51. How do you implement route guards in React Router?
 
 **Answer:** Implement route guards by creating higher-order components or custom route components that check authentication or authorization before rendering protected routes.
+``` jsx
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+
+const withAuth = (Component) => {
+  return (props) => {
+    const isAuthenticated = // your auth logic here;
+    return isAuthenticated ? <Component {...props} /> : <Navigate to="/login" />;
+  };
+};
+
+const ProtectedRoute = withAuth(SomeComponent);
+
+export default ProtectedRoute;
+```
 
 ### 52. What is a route parameter in React Router?
 
